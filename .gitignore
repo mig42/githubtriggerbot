@@ -3,3 +3,4 @@ obj
 .vscode
 secrets.json
 /wwwroot/lib
+*.min.js
