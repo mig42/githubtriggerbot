@@ -1,0 +1,5 @@
+bin
+obj
+.vscode
+secrets.json
+/wwwroot/lib
