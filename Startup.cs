@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,12 +8,22 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using githubtriggerbot.Data;
 using githubtriggerbot.Models;
 using githubtriggerbot.Services;
 
 namespace githubtriggerbot
 {
+    static class OAuthScope
+    {
+        internal static void AddOAuthScopes(this ICollection<string> oauthScope, params string[] scopes)
+        {
+            foreach (var scope in scopes)
+                oauthScope.Add(scope);
+        }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -38,6 +50,7 @@ namespace githubtriggerbot
             {
                 options.ClientId = Configuration["GitHub:ClientId"];
                 options.ClientSecret = Configuration["GitHub:ClientSecret"];
+                options.Scope.AddOAuthScopes("read:user", "read:email", "repo", "admin:repo_hook");
             });
 
             services.AddMvc();
