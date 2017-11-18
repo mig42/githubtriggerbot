@@ -4,3 +4,5 @@ obj
 secrets.json
 /wwwroot/lib
 *.min.js
+*.db
+*.sqlite
