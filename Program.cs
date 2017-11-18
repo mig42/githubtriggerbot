@@ -19,6 +19,10 @@ namespace githubtriggerbot
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddUserSecrets<Startup>(optional: true);
+                })
                 .UseStartup<Startup>()
                 .Build();
     }
