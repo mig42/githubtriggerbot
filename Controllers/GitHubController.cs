@@ -30,13 +30,13 @@ namespace githubtriggerbot.Controllers
 
             IEnumerable<Repository> repos = await github.Repository.GetAllForCurrent();
 
-            var model = new GitHubRepositoryListViewModel
+            var repoList = await BuildRepoList(github, repos);
+
+            return View(new GitHubRepositoryListViewModel
             {
                 UserName = user.UserName,
-                Repos = repos.Select(repo =>
-                    new GitHubRepositoryViewModel { Name = repo.Name, Url = repo.HtmlUrl })
-            };
-            return View(model);
+                Repos = repoList
+            });
         }
 
         [HttpPost]
@@ -45,6 +45,43 @@ namespace githubtriggerbot.Controllers
         {
             // TODO
             return NotFound();
+        }
+
+        async Task<IEnumerable<GitHubRepositoryViewModel>> BuildRepoList(
+            GitHubClient client, IEnumerable<Repository> repos)
+        {
+            var result = new List<GitHubRepositoryViewModel>();
+            foreach (var repo in repos)
+            {
+                result.Add(new GitHubRepositoryViewModel
+                {
+                    Name = repo.FullName,
+                    Url = repo.HtmlUrl,
+                    IsLinked = await IsPullRequestHookSet(client, repo)
+                });
+            }
+            return result;
+        }
+
+        async Task<bool> IsPullRequestHookSet(GitHubClient client, Repository repository)
+        {
+            try
+            {
+                var hooks = await client.Repository.Hooks.GetAll(repository.Id);
+                return hooks.Any(hook => GetHookFromDb(hook) != null);
+            }
+            catch (System.Exception)
+            {
+                // TODO log exception, most likely no hooks are set
+                return false;
+            }
+        }
+
+        // TODO
+        // This will probably turn into async
+        object GetHookFromDb(RepositoryHook hook)
+        {
+            return null;
         }
 
         readonly UserManager<ApplicationUser> _userManager;
