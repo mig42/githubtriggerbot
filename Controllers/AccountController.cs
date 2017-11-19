@@ -91,6 +91,7 @@ namespace githubtriggerbot.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
@@ -105,22 +106,15 @@ namespace githubtriggerbot.Controllers
                 UserName = info.Principal.FindFirstValue(ClaimTypes.Name),
                 DisplayName = info.Principal.FindFirstValue("urn:github:name"),
                 Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                EmailConfirmed = true,
-                GitHubToken = info.AuthenticationTokens.FirstOrDefault(token => token.Name == "access_token")?.Value
+                EmailConfirmed = true
             };
-
-            if (string.IsNullOrEmpty(user.GitHubToken))
-            {
-                _logger.LogWarning("Login with {email} didn't contain an auth token", user.Email);
-                ModelState.AddModelError(
-                    string.Empty,
-                     "Unable to retrieve the authentication token for " + info.LoginProvider);
-                return BuildRedirectionToExternalLoginError(info.LoginProvider);
-            }
 
             var identityResult = await CreateExternalUser(info, user);
             if (identityResult.Succeeded)
+            {
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                 return RedirectToLocal(returnUrl);
+            }
 
             AddIdentityErrors(identityResult);
             return BuildRedirectionToExternalLoginError(info.LoginProvider);
