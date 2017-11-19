@@ -1,0 +1,17 @@
+﻿@model ExternalLoginErrorViewModel
+@{
+    ViewData["Title"] = "Register error";
+}
+
+<h2>@ViewData["Title"]</h2>
+<h4>Unable to associate your @Model.Provider account.</h4>
+<hr />
+
+<p class="text-info">
+    There was an error trying to authenticate with <strong>@Model.Provider</strong>.
+    Please try again in a while.
+</p>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

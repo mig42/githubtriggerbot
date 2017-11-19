@@ -19,8 +19,19 @@
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
+    var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+    if (loginProviders.Count >= 0)
+    {
+    <form asp-area="" asp-controller="Account" asp-action="ExternalLogin" id="externalLoginForm" method="post" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="btn btn-link navbar-btn navbar-link"><em>Login with:</em></li>
+            <li>
+                @foreach (var provider in loginProviders)
+                {
+                    <button type="submit" class="btn btn-link navbar-btn navbar-link" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
+                }
+            </li>
+        </ul>
+    </form>
+    }
 }
