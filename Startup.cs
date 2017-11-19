@@ -62,6 +62,7 @@ namespace githubtriggerbot
         {
             if (env.IsDevelopment())
             {
+                app.UseStatusCodePages();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
