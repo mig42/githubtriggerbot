@@ -17,7 +17,6 @@ using githubtriggerbot.Services;
 namespace githubtriggerbot.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         readonly UserManager<ApplicationUser> _userManager;
