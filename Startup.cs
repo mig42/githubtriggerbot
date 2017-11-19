@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +50,7 @@ namespace githubtriggerbot
                 options.ClientId = Configuration["GitHub:ClientId"];
                 options.ClientSecret = Configuration["GitHub:ClientSecret"];
                 options.Scope.AddOAuthScopes("read:user", "read:email", "repo", "admin:repo_hook");
+                options.SaveTokens = true;
             });
 
             services.AddMvc();
