@@ -1,4 +1,6 @@
-﻿@{
+﻿@using githubtriggerbot.Controllers
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,7 +8,7 @@
     <div class="col-md-3">
         <h2>GitHub actions</h2>
         <ul>
-            <li><a asp-area="" asp-controller="Github" asp-action="@nameof(GithubController.ListRepos)">Enable pull request webhooks</a></li>
+            <li><a asp-area="" asp-controller="GitHub" asp-action="@nameof(GitHubController.ListRepos)">Enable pull request webhooks</a></li>
         </ul>
     </div>
 </div>
