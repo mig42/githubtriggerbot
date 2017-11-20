@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using githubtriggerbot.Models;
 
-namespace githubtriggerbot.Data
+namespace githubtriggerbot.Data.Users
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class UsersDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public UsersDbContext(DbContextOptions<UsersDbContext> options)
             : base(options)
         {
         }
