@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using Octokit;
-using githubtriggerbot.Models;
-using System.Collections.Generic;
+
+using githubtriggerbot.Data.Users;
 using githubtriggerbot.Models.GitHubViewModels;
 
 namespace githubtriggerbot.Controllers
