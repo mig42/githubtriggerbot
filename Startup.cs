@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OAuth;
+﻿using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using githubtriggerbot.Data;
-using githubtriggerbot.Models;
 using githubtriggerbot.Services;
+using githubtriggerbot.Data.Users;
+using githubtriggerbot.Data.Repositories;
+using githubtriggerbot.Data;
 
 namespace githubtriggerbot
 {
@@ -36,11 +34,14 @@ namespace githubtriggerbot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<UsersDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("Users")));
+
+            services.AddDbContext<RepositoriesDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("Repositories")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
