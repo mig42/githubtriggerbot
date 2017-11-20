@@ -1,0 +1,27 @@
+@using System.Collections.Generic
+@using githubtriggerbot.Models.GitHubViewModels
+@using githubtriggerbot.Controllers
+
+@model GitHubRepositoryListViewModel
+
+<h1>Repos of <em>@Model.UserName</em></h1>
+@foreach (GitHubRepositoryViewModel repo in Model.Repos)
+{
+<div class="row">
+    <div class="col-md-10">
+        <form class="form-inline" asp-action="@nameof(GitHubController.LinkTrigger)" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <label asp-for="@repo.Name"></label>
+            <input asp-for="@repo.Name" class="form-control" readonly />
+
+            <label asp-for="@repo.Url"></label>
+            <input asp-for="@repo.Url" class="form-control" readonly />
+
+            <label class="form-check-label" asp-for="@repo.IsLinked"></label>
+            <input asp-for="@repo.IsLinked" class="form-check-input" />
+
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+}

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace githubtriggerbot.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string GitHubToken { get; set; }
+        [Required]
         public string DisplayName { get; set; }
     }
 }

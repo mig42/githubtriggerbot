@@ -17,7 +17,6 @@ using githubtriggerbot.Services;
 namespace githubtriggerbot.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         readonly UserManager<ApplicationUser> _userManager;
@@ -39,6 +38,17 @@ namespace githubtriggerbot.Controllers
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl = null)
+        {
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -91,6 +101,7 @@ namespace githubtriggerbot.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
@@ -105,22 +116,15 @@ namespace githubtriggerbot.Controllers
                 UserName = info.Principal.FindFirstValue(ClaimTypes.Name),
                 DisplayName = info.Principal.FindFirstValue("urn:github:name"),
                 Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                EmailConfirmed = true,
-                GitHubToken = info.AuthenticationTokens.FirstOrDefault(token => token.Name == "access_token")?.Value
+                EmailConfirmed = true
             };
-
-            if (string.IsNullOrEmpty(user.GitHubToken))
-            {
-                _logger.LogWarning("Login with {email} didn't contain an auth token", user.Email);
-                ModelState.AddModelError(
-                    string.Empty,
-                     "Unable to retrieve the authentication token for " + info.LoginProvider);
-                return BuildRedirectionToExternalLoginError(info.LoginProvider);
-            }
 
             var identityResult = await CreateExternalUser(info, user);
             if (identityResult.Succeeded)
+            {
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                 return RedirectToLocal(returnUrl);
+            }
 
             AddIdentityErrors(identityResult);
             return BuildRedirectionToExternalLoginError(info.LoginProvider);
