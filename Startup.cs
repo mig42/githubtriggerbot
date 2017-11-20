@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using githubtriggerbot.Services;
 using githubtriggerbot.Data.Users;
 using githubtriggerbot.Data.Repositories;
-using githubtriggerbot.Data;
+using githubtriggerbot.Services;
 
 namespace githubtriggerbot
 {
